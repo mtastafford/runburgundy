@@ -3,9 +3,13 @@ from steem import Steem
 import requests
 import feedparser
 import datetime
+import time
 
 from datetime import date
 today = date.today()
+cutoff = time.localtime(time.mktime(time.localtime())-3600*24)
+
+
 open('post.txt', 'w').close()
 postfile = open('post.txt', 'a')
 print(today)
@@ -23,11 +27,10 @@ def get_run(user):
     response = requests.get(url).text
     rss = feedparser.parse(response)
     response = []
-    print(rss)
-    #for post in rss.entries:
-    #    response.append(post.title + ": " + post.link)
-    if len(rss.entries) >= 1:
-        response=" posted: " + rss.entries[0]['title'] + " on: " + rss.entries[0]['published']
+    if len(rss['entries']) >= 1:
+        for i in range(len(rss.entries)):
+            if rss.entries[i]['published_parsed'] >= cutoff:
+                response.append('    ' + rss.entries[i]['title'] + " on: " + rss.entries[i]['published'])
     return response
 
 
@@ -42,17 +45,17 @@ follows = get_follows('runburgundy')
 
 for follow in follows:
     with open('post.txt', 'a') as postfile:	
-        newline = (follow + ": " + str(get_run(follow))+'\n')
-        print(newline)
-        postfile.write(newline)
-#        if follow == 'mstafford':
-#            newline = (follow + ": " + str(get_run('mtastafford'))+'\n')
-#            print(newline)
-#            postfile.write(newline)
-#        else:
-#            newline = (follow + ": " + str(get_run(follow))+'\n')
-#            print(newline)
-#            postfile.write(newline)
+        runlist = get_run(follow)
+        header = (follow + " posted the following:"+'\n')
+        print(header)
+        print(runlist)
+        postfile.write(header)
+        if len(runlist)>=1:
+            for i in range(len(runlist)):
+                postfile.write(str(runlist[i])+'\n')
+        else:
+            postfile.write('~~~fuck all~~~\n')
+
 postfile = open('post.txt', 'a')
 postfile.write("## Run Burgundy is a FitNation initiative\n")
 postfile.write("Thanks for stopping by, San Diego\n")
