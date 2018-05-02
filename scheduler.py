@@ -43,8 +43,8 @@ def submit_post(title, tags, body, author):
 
 def run():
     author = 'runburgundy'
-    upvote_bot = 'minnowbooster'
-    amount = 0.05
+    #upvote_bot = 'minnowbooster'
+    #amount = 0.05
 
     post = [line.rstrip('\n') for line in open('post.txt')]
     title  = post[0]

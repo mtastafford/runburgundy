@@ -1,11 +1,7 @@
-ax3: []
-cryptoa: []
-cryptoriddler: []
-hamila: []
-livo: []
-loov: []
-mstafford: ['Running: 00:57:55h - 10.33 km: https://runalyze.com/shared/24yk9?utm_medium=feed&utm_campaign=feed', 'Other: 00:35:51h - 5.81 km: https://runalyze.com/shared/1v10k?utm_medium=feed&utm_campaign=feed', 'Running (Jogging): 00:33:43h - 5.85 km: https://runalyze.com/shared/1ugd5?utm_medium=feed&utm_campaign=feed', 'Running (Jogging): 00:10:10h - 1.59 km: https://runalyze.com/shared/1ttuw?utm_medium=feed&utm_campaign=feed', 'Running (Jogging): 00:26:30h - 4.18 km: https://runalyze.com/shared/1simw?utm_medium=feed&utm_campaign=feed']
-nolla: []
-obaku: []
-sadee: []
-zalat: []
+Running Log: 2018-05-01.
+running runburgundy fitnation fitness training
+## <center>This is one of the first automated posts for the Run Burgundy Decentralized Running Group.</center>
+### <center>We're still figuring some shit out, and aren't ready to go live just yet.</center>
+#### <center>If you're interested in joining, talk to @mstafford.</center>
+
+## Below is a summary of the groups runs for 2018-05-01.
