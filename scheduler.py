@@ -36,17 +36,18 @@ def submit_post(title, tags, body, author):
         steem.post(title, body, author, permlink, None, None, None, None, tags, None, True)
         print ("Submitted post")
     except Exception as error:
+        print("FUCK")
         print(repr(error))
 
     return permlink
 
 
 def run():
-    author = 'runburgundy'
+    author = 'thatsabingo'
     #upvote_bot = 'minnowbooster'
     #amount = 0.05
 
-    post = [line.rstrip('\n') for line in open('/home/mark/post.txt')]
+    post = [line.rstrip('\n') for line in open('/home/mark/testing.txt')]
     title  = post[0]
     tags = post[1]
     body = '\n'.join(post[2:])
