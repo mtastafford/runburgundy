@@ -15,11 +15,14 @@ today = date.today()
 time_now = time.time()
 day_month = time.localtime()[2]
 day_week = time.localtime()[6]
+time_hours = time.localtime()[3]
+time_minutes = time.localtime()[4]
+time_seconds = time.localtime()[5]
 month_cutoff = time.localtime(time.mktime(time.localtime())-3600*24*day_month)
 if day_week == 0:
     week_cutoff = time.localtime(time.mktime(time.localtime()) - 3600*24)
 else:
-    week_cutoff = time.localtime(time.mktime(time.localtime()) - 3600*24*day_week)
+    week_cutoff = time.localtime(time.mktime(time.localtime()) - 3600*24*day_week-time_hours*3600-time_minutes*65-time_seconds)
 day_cutoff = time.localtime(time.mktime(time.localtime())-3600*24)
 dist_pattern = '\d*[\.]*\d*\ km'
 dist_table={} #store daily, weekly, and monthly kms for users
@@ -32,16 +35,16 @@ rewards = float(rewards[0])
 open('/home/mark/post.txt', 'w').close()
 postfile = open('/home/mark/post.txt', 'a')
 postfile.write("Run Burgundy - Decentralized Fitness Group - Activity Log: " + str(today) + ".\n") ### This line is the title of the post
-postfile.write("running runburgundy fitnation fitness training\n") ### This line holds the tags
+postfile.write("fitnation running cycling hiking fitness\n") ### This line holds the tags
 postfile.write("![Run_Burgandy.png](https://steemitimages.com/DQmewBzW8MzewBP3qcUJzNL79hmfzM1qUquedRdSaLX83K4/Run_Burgandy.png)\n") ### This line should be the header image
-postfile.write("## <center>This week number 1 for the Run Burgundy Decentralized Fitness Group.</center>\n")
-postfile.write("### <center>If you like to run, or cycle -- then boy oh boy is this the place for you.</center>\n#### <center>We're now accepting members! Lets talk in the discord, or the comments below!</center>\n")
+postfile.write("## <center>Welcome to Week No. 002, San Diego!</center>\n")
+postfile.write("### <center>If you like exercising, earning money, and getting the freshest #fitnation fitness news delivered to your eyeholes -- then I'm afraid you've come to the right place.</center>\n#### <center>We're now accepting members! Lets talk in the discord, or the comments below!</center>\n")
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
-postfile.write("### <center> This is the official *Launch Week* for the Run Burgundy Fitness Group!</center>\n The idea is pretty simple:\n * Make yourself a (free!) account for athletics tracking at [Runalyze](https://runalyze.com) (open-source running / athletics analytics site);\n * Post some GPS tracked runs/bikes/hikes to your new Runalyze account; \n * Talk to some people at #FitNation (try the [discord](https://discord.gg/QPQBEQV)) to prove you're real and meet peoples;\n * Vote on these daily posts to increase their rewards;\n * At the end of each week, the SBD rewards get distributed based on kilometres travelled!\n")
+postfile.write("### <center> BY THE POWER OF GREYSKULL!!</center>\n ### <center> We made it to the 2nd week! </center>\n How to join our fitness group:\n * Make yourself a (free!) account for athletics tracking at [Runalyze](https://runalyze.com) (open-source running / athletics analytics site);\n * Post some GPS tracked runs/bikes/hikes to your new Runalyze account; \n * Talk to some people at #FitNation (try the [discord](https://discord.gg/QPQBEQV)) to prove you're real and meet peoples;\n * Vote on these daily posts to increase their rewards;\n * At the end of each week, the SBD rewards get distributed based on kilometres travelled!\n")
 postfile.write("### This is still a work in progress, and there are some features to come -- such as:\n")
 postfile.write(" * Autovoter if users write a post with #fitnation tag;\n * *Decentralized races*;\n * Leaderboards;\n * Featured users;\n * I'm really just kinda making this up as I go...\nJust remember... \n https://www.youtube.com/watch?v=B6nFhcI4tgI")
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
-postfile.write("#### Current Rewards Available so far for Last Week = " + claimable + "!<br>This will be divided up amongst group members based on weekly kilometres ran & cycled!\n") ### Rewards from prev. week
+postfile.write("#### Current rewards available for last weeks exercises = " + claimable + "!<br>This will be divided up amongst group members based on weekly kilometres ran & cycled!\n") ### Rewards from prev. week
 postfile.write("*Note that 1km of running is weighted the same as 3km of cycling!*\n")
 postfile.write("## Below is a summary of the groups runs/bikes/hikes as of " + str(today) + ".\n")
 postfile.write("*Weekly summary is from Monday->Sunday. Monthly summary is from the 1st to end of month.*\n")
@@ -49,6 +52,8 @@ postfile.write("*Weekly summary is from Monday->Sunday. Monthly summary is from 
 def get_activities(user): ## Get activities for individual users from Runalyze.com
     if user == 'mstafford': ## If runalyze account != steemit account, must have database of usernames
         user = 'mtastafford'
+    if user == 'phelimint':
+        user = 'philb'
     url = 'https://runalyze.com/athlete/' + user + '/feed' ##RSS feed url
     response = requests.get(url).text
     rss = feedparser.parse(response)  ## Parse RSS feed
@@ -79,6 +84,9 @@ def get_dists():
             distance = float(distance[0])##change distance string to float
             run_day += distance #add activity distance to week total
     for i in range(len(activity_list)):  ## Summing up weekly running distance
+        print(week_cutoff)
+        print(follow)
+        print(activity_list[i]['published'])
         if activity_list[i]['published'] >= week_cutoff and activity_list[i]['sport'] == ('Running' or 'Jogging' or 'Walking'): ##if posted since sunday at midnight & Run/Jog/Walk, activity counts
             distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ')## search for distance using regex pattern above. 
             distance = float(distance[0])##change distance string to float
@@ -145,8 +153,11 @@ for follow in follows:
         account_info=s.get_account(follow)
         activity_list = get_activities(follow) #get user activities
         postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
+        print(follow)
         if len(account_info['json_metadata'])>=1:
             profile_data = json.loads(account_info['json_metadata'])
+            if profile_data == {}:
+                break
             profileImage = profile_data['profile']['profile_image']
             postfile.write("#### !["+follow+"](https://steemitimages.com/0x100/"+profileImage+")")
             postfile.write("Summary for @" + follow +": <hr>\n") #Introduce athlete
@@ -157,31 +168,31 @@ for follow in follows:
             for i in range(len(activity_list)): 
                 if activity_list[i]['published'] >= day_cutoff: ##if posted since midnight yesterday, activity counts
                     postfile.write("* " + str(activity_list[i]['distance'])+" of " + str(activity_list[i]['sport']) + " for a duration of " + str(activity_list[i]['duration']) + " (hh:mm:ss)!\n")
-            postfile.write("##### Weekly Summary: ")
+            postfile.write("##### Weekly Summary: ") ### WEEKLY SUMMARY
             if dist_table[follow]['weekrun'] > 0:
-                postfile.write("Ran " + str(dist_table[follow]['weekrun']) + " km!    |    ")
+                postfile.write("Ran " + str(round(dist_table[follow]['weekrun'],2)) + " km!    |    ")
             else:
                 postfile.write("No Running :(    |    ")
             if dist_table[follow]['weekother'] > 0:
-                postfile.write("Hiked / Other'd " + str(dist_table[follow]['weekother'] > 0) + " km!    |    ")
+                postfile.write("Hiked / Other'd " + str(round(dist_table[follow]['weekother'],2)) + " km!    |    ")
             else:
                 postfile.write("No Hiking :(    |    ")
             if dist_table[follow]['weekbike'] > 0:
-                postfile.write("Biked " + str(dist_table[follow]['weekbike']) + " km!\n")
+                postfile.write("Biked " + str(round(dist_table[follow]['weekbike'],2)) + " km!\n")
             else:
                 postfile.write("No Biking :( \n")
 #            postfile.write("Estimated Payout for the Week = " + str(round((rewards*dist_table[follow]['weekrelative']/dist_table['RB_TOTAL_WEEK']['weekrelative']),3)) +" SBD!\n")
-            postfile.write("##### Monthly Summary: ")
+            postfile.write("##### Monthly Summary: ") ### MONTHLY SUMMARY
             if dist_table[follow]['monthrun'] > 0:
-                postfile.write("Ran " + str(dist_table[follow]['monthrun']) + " km!    |    ")
+                postfile.write("Ran " + str(round(dist_table[follow]['monthrun'],2)) + " km!    |    ")
             else:
                 postfile.write("No Running :(    |    ")
             if dist_table[follow]['monthother'] > 0:
-                postfile.write("Hiked / Other'd " + str(dist_table[follow]['monthother']) + " km!    |    ")
+                postfile.write("Hiked / Other'd " + str(round(dist_table[follow]['monthother'],2)) + " km!    |    ")
             else:
                 postfile.write("No Hiking :(    |    ")
             if dist_table[follow]['monthbike'] > 0:
-                postfile.write("Biked " + str(dist_table[follow]['monthbike']) + " km!\n")
+                postfile.write("Biked " + str(round(dist_table[follow]['monthbike'],2)) + " km!\n")
             else:
                 postfile.write("No Biking :(\n")
             recent_posts = s.get_blog(follow,-1,50)

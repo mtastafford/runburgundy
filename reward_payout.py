@@ -31,9 +31,11 @@ tb = TransactionBuilder()
 
 # lets serialize our transfers into a format Steem can understand
 operations = [operations.Transfer(**x) for x in transfers]
+print(operations)
 
 # tell TransactionBuilder to use our serialized transfers
 tb.appendOps(operations)
+print(tb)
 
 # we need to tell TransactionBuilder about
 # everyone who needs to sign the transaction.
@@ -43,7 +45,8 @@ tb.appendSigner('runburgundy', 'active')
 
 # sign the transaction
 tb.sign()
-
+print(tb)
+print(type(tb))
 # broadcast the transaction (publish to steem)
 # since we specified no_broadcast=True earlier
 # this method won't actually do anything
