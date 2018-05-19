@@ -42,7 +42,9 @@ postfile.write("### <center>If you like exercising, earning money, and getting t
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
 postfile.write("### <center> BY THE POWER OF GREYSKULL!!</center>\n ### <center> We made it to the 2nd week! </center>\n How to join our fitness group:\n * Make yourself a (free!) account for athletics tracking at [Runalyze](https://runalyze.com) (open-source running / athletics analytics site);\n * Post some GPS tracked runs/bikes/hikes to your new Runalyze account; \n * Talk to some people at #FitNation (try the [discord](https://discord.gg/QPQBEQV)) to prove you're real and meet peoples;\n * Vote on these daily posts to increase their rewards;\n * At the end of each week, the SBD rewards get distributed based on kilometres travelled!\n")
 postfile.write("### This is still a work in progress, and there are some features to come -- such as:\n")
-postfile.write(" * Autovoter if users write a post with #fitnation tag;\n * *Decentralized races*;\n * Leaderboards;\n * Featured users;\n * I'm really just kinda making this up as I go...\nJust remember... \n https://www.youtube.com/watch?v=B6nFhcI4tgI")
+postfile.write(" * Autovoter if users write a post with #fitnation tag;\n * *Decentralized races*;\n * Leaderboards;\n * Featured users;\n * I'm really just kinda making this up as I go...\n")
+gif = translate('anchorman')
+postfile.write("<center>![gif_test]("+gif.media_url+")</center>\n")
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
 postfile.write("#### Current rewards available for last weeks exercises = " + claimable + "!<br>This will be divided up amongst group members based on weekly kilometres ran & cycled!\n") ### Rewards from prev. week
 postfile.write("*Note that 1km of running is weighted the same as 3km of cycling!*\n")
@@ -84,9 +86,6 @@ def get_dists():
             distance = float(distance[0])##change distance string to float
             run_day += distance #add activity distance to week total
     for i in range(len(activity_list)):  ## Summing up weekly running distance
-        print(week_cutoff)
-        print(follow)
-        print(activity_list[i]['published'])
         if activity_list[i]['published'] >= week_cutoff and activity_list[i]['sport'] == ('Running' or 'Jogging' or 'Walking'): ##if posted since sunday at midnight & Run/Jog/Walk, activity counts
             distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ')## search for distance using regex pattern above. 
             distance = float(distance[0])##change distance string to float
@@ -211,6 +210,3 @@ postfile = open('/home/mark/post.txt', 'a')
 postfile.write("## Run Burgundy is a FitNation initiative\n")
 postfile.write("You stay classy, San Diego\n")
 postfile.write('<center>[![discord](https://steemitimages.com/0x150/https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2017/12/Discord-Logo-796x396.jpg)](https://discord.gg/QPQBEQV) || <a href="https://runalyze.com/athlete/mtastafford" target="_blank"><img src="https://cdn.runalyze.com/social/v1/signature.png"/></a></center>')
-
-#gif = translate('anchorman')
-#postfile.write("<center>![gif_test]("+gif.url+")</center>")
