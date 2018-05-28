@@ -32,8 +32,8 @@ val_pattern = '\d*[\.]\d*'
 rewards = re.search(val_pattern, claimable).group(0).split(' ')
 rewards = float(rewards[0])
 
-open('/home/mark/post.txt', 'w').close()
-postfile = open('/home/mark/post.txt', 'a')
+open('/home/pi/post.txt', 'w').close()
+postfile = open('/home/pi/post.txt', 'a')
 postfile.write("Run Burgundy - Decentralized Fitness Group - Activity Log: " + str(today) + ".\n") ### This line is the title of the post
 postfile.write("fitnation running cycling hiking fitness\n") ### This line holds the tags
 postfile.write("![Run_Burgandy.png](https://steemitimages.com/DQmewBzW8MzewBP3qcUJzNL79hmfzM1qUquedRdSaLX83K4/Run_Burgandy.png)\n") ### This line should be the header image
@@ -41,8 +41,8 @@ postfile.write("## <center>Welcome to Week No. 002, San Diego!</center>\n")
 postfile.write("### <center>If you like exercising, earning money, and getting the freshest #fitnation fitness news delivered to your eyeholes -- then I'm afraid you've come to the right place.</center>\n#### <center>We're now accepting members! Lets talk in the discord, or the comments below!</center>\n")
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
 postfile.write("### <center> BY THE POWER OF GREYSKULL!!</center>\n ### <center> We made it to the 2nd week! </center>\n How to join our fitness group:\n * Make yourself a (free!) account for athletics tracking at [Runalyze](https://runalyze.com) (open-source running / athletics analytics site);\n * Post some GPS tracked runs/bikes/hikes to your new Runalyze account; \n * Talk to some people at #FitNation (try the [discord](https://discord.gg/QPQBEQV)) to prove you're real and meet peoples;\n * Vote on these daily posts to increase their rewards;\n * At the end of each week, the SBD rewards get distributed based on kilometres travelled!\n")
-postfile.write("### This is still a work in progress, and there are some features to come -- such as:\n")
-postfile.write(" * Autovoter if users write a post with #fitnation tag;\n * *Decentralized races*;\n * Leaderboards;\n * Featured users;\n * I'm really just kinda making this up as I go...\n")
+postfile.write("### This is still a work in progress, and there are bound to be some bumps along the way, and some changes here and there... such as...\n")
+postfile.write(" * We're going to shift our daily broadcast to 8:30pm Pacific Standard Time! This way, there's a higher chance that people over here will actually see these posts and be encouraged to read them -- as opposed to posting at midnight (plus, it's a reasonable time where I live...\n * This means that eventually, these posts will turn into a summary of YESTERDAY's activities, rather than *today*...\n * We'll figure it out. It'll be fine...\n ## <center>Neato, gang!</center>")
 gif = translate('anchorman')
 postfile.write("<center>![gif_test]("+gif.media_url+")</center>\n")
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
@@ -61,13 +61,22 @@ def get_activities(user): ## Get activities for individual users from Runalyze.c
     rss = feedparser.parse(response)  ## Parse RSS feed
     activity_list = []
     for post in rss.entries:
-        my_values = dict(re.sub('\&nbsp;', ' ', re.sub('<[^<]+?>', '', x)).split(': ') for x in post['content'][0]['value'][:-1].split('<br>')[:5]) ## Remove "<b>" and remove "\&nbsp" from activity description and add to dict
-        my_values = {key.lower(): value for key, value in my_values.items()}
-        my_values.update({'published': post['published']})
-        my_values['date'] = time.strptime(my_values['date'], '%d.%m.%Y')
-        my_values['published'] = time.strptime(my_values['published'], "%a, %d %b %Y %H:%M:%S %z")
-        activity_list.append(my_values) ## add cleaned up information to list
-        sorted(activity_list, key=lambda k: k['date'])
+        print(post['content'][0]['value'])
+        if '&nbsp;' in post['content'][0]['value']:
+            my_values = dict(re.sub('\&nbsp;', ' ', re.sub('<[^<]+?>', '', x)).split(': ') for x in post['content'][0]['value'][:-1].split('<br>')[:5]) ## Remove "<b>" and remove "\&nbsp" from activity description and add to dict
+#        else:
+#            print("I'm gonna break...")
+#            my_values = dict(re.sub('<[^<]+?>', ' ', x).split(': ') for x in post['content'][0]['value'][:-1].split('<br>')[:4]) ## Remove "<b>" from activity description and add to dict
+#        my_values = dict(re.sub('\&nbsp;', ' ', re.sub('<[^<]+?>', '', x)).split(': ') for x in post['content'][0]['value'][:-1].split('<br>')[:5]) ## Remove "<b>" and remove "\&nbsp" from activity description and add to dict
+#        print(my_values)
+            print(user)
+            my_values = {key.lower(): value for key, value in my_values.items()}
+            print(my_values)
+            my_values.update({'published': post['published']})
+            my_values['date'] = time.strptime(my_values['date'], '%d.%m.%Y')
+            my_values['published'] = time.strptime(my_values['published'], "%a, %d %b %Y %H:%M:%S %z")
+            activity_list.append(my_values) ## add cleaned up information to list
+            sorted(activity_list, key=lambda k: k['date'])
     return activity_list
 
 def get_dists():
@@ -148,7 +157,7 @@ for follow in follows: ##initial scrape and weekly / monthly totals
     get_dists()
 
 for follow in follows:
-    with open('/home/mark/post.txt', 'a') as postfile:
+    with open('/home/pi/post.txt', 'a') as postfile:
         account_info=s.get_account(follow)
         activity_list = get_activities(follow) #get user activities
         postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
@@ -206,7 +215,7 @@ for follow in follows:
             postfile.write("YOU HAVEN'T POSTED ANYTHING TO RUNALYZE YET!!\n")
             postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
 
-postfile = open('/home/mark/post.txt', 'a')
+postfile = open('/home/pi/post.txt', 'a')
 postfile.write("## Run Burgundy is a FitNation initiative\n")
 postfile.write("You stay classy, San Diego\n")
 postfile.write('<center>[![discord](https://steemitimages.com/0x150/https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2017/12/Discord-Logo-796x396.jpg)](https://discord.gg/QPQBEQV) || <a href="https://runalyze.com/athlete/mtastafford" target="_blank"><img src="https://cdn.runalyze.com/social/v1/signature.png"/></a></center>')
