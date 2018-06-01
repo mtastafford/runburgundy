@@ -9,6 +9,10 @@ import math
 import json
 import giphypop
 from giphypop import translate
+import os
+
+post_path = str(os.environ.get('HOME') + '/reward_post.txt')
+
 
 s = Steem()
 today = date.today()
@@ -31,8 +35,8 @@ val_pattern = '\d*[\.]\d*'
 rewards = re.search(val_pattern, claimable).group(0).split(' ')
 rewards = float(rewards[0])
 
-open('/home/pi/reward_post.txt', 'w').close()
-postfile = open('/home/pi/reward_post.txt', 'a')
+open(post_path, 'w').close()
+postfile = open(post_path, 'a')
 postfile.write("Run Burgundy - Decentralized Fitness Group - REWARD TIME!: " + str(today) + ".\n") ### This line is the title of the post
 postfile.write("running runburgundy fitnation fitness training\n") ### This line holds the tags
 postfile.write("![Run_Burgandy.png](https://steemitimages.com/DQmewBzW8MzewBP3qcUJzNL79hmfzM1qUquedRdSaLX83K4/Run_Burgandy.png)\n") ### This line should be the header image
@@ -43,7 +47,7 @@ postfile.write("### <center> This is officialy **THE FIRST** reward payout for t
 
 
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
-postfile.write("#### Current Rewards Available so far for Last Week = " + claimable + "!<br>This will be divided up amongst group members based on weekly kilometres ran & cycled!\n") ### Rewards from prev. week
+postfile.write("## Total Group Rewards earned last week = " + claimable + "!<br>This will be divided up amongst group members based on weekly kilometres ran & cycled!\n") ### Rewards from prev. week
 postfile.write("*Note that 1km of running is weighted the same as 3km of cycling!*\n")
 postfile.write("## Below is a summary of the groups runs/bikes/hikes for the week ending: " + last_week_pretty + "\n")
 
@@ -113,12 +117,15 @@ for follow in follows: ##initial scrape and weekly / monthly totals
     activity_list = get_activities(follow) #get user activities
     get_dists()
 
-postfile.write("## Total KM's Ran: " + str(dist_table['RB_TOTAL_WEEK']['weekrun']) + "\n")
-postfile.write("## Total KM's Biked: " + str(dist_table['RB_TOTAL_WEEK']['weekbike']) + "\n")
-postfile.write("## Total Weighted KM's: " + str(dist_table['RB_TOTAL_WEEK']['weekrelative']) + "\n")
+postfile.write("## Total km's Ran: " + str(round(dist_table['RB_TOTAL_WEEK']['weekrun'],3)) + "\n")
+postfile.write("## Total km's Biked: " + str(round(dist_table['RB_TOTAL_WEEK']['weekbike'],3)) + "\n")
+postfile.write("## Total Weighted km's: " + str(dist_table['RB_TOTAL_WEEK']['weekrelative']) + "\n")
+
+asset = 'SBD'
+message = 'Testing!'
 
 for follow in follows:
-    with open('/home/pi/reward_post.txt', 'a') as postfile:
+    with open(post_path, 'a') as postfile:
         account_info=s.get_account(follow)
         activity_list = get_activities(follow) #get user activities
         postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
@@ -145,14 +152,16 @@ for follow in follows:
                 postfile.write("Biked " + str(dist_table[follow]['biking']) + " km!\n")
             else:
                 postfile.write("No Biking :( \n")
-            postfile.write("#### Weighted Km's = " + str(dist_table[follow]['weekrelative']) + "!\n")
-            share = round((dist_table[follow]['weekrelative'])/(dist_table['RB_TOTAL_WEEK']['weekrelative'])*float(rewards),3)
+            postfile.write("#### Weighted km's = " + str(dist_table[follow]['weekrelative']) + "!\n")
+#            share = round((dist_table[follow]['weekrelative'])/(dist_table['RB_TOTAL_WEEK']['weekrelative'])*float(rewards),3)
+            share = 0.001
             postfile.write("#### Reward earned = " + str(dist_table[follow]['weekrelative']) + " / " + str(dist_table['RB_TOTAL_WEEK']['weekrelative']) + " x " + str(rewards) + " SBD = " + str(share) + " SBD!\n")
         else:
             postfile.write("YOU HAVEN'T POSTED ANYTHING TO RUNALYZE YET!!\n")
             postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
+        #s.transfer(follow, amount=share, asset=asset, memo=message, account='runburgundy')
 
-postfile = open('/home/pi/reward_post.txt', 'a')
+postfile = open(post_path, 'a')
 postfile.write("## Run Burgundy is a FitNation initiative\n")
 postfile.write("You stay classy, San Diego\n")
 postfile.write('<center>[![discord](https://steemitimages.com/0x150/https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2017/12/Discord-Logo-796x396.jpg)](https://discord.gg/QPQBEQV) || <a href="https://runalyze.com/athlete/mtastafford" target="_blank"><img src="https://cdn.runalyze.com/social/v1/signature.png"/></a></center>')
