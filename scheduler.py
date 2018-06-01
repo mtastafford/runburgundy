@@ -3,6 +3,7 @@ from steem.transactionbuilder import TransactionBuilder
 from steembase import operations
 
 import time, random, os
+post_path = os.environ.get('HOME')
 
 def buy_upvote(author,upvote_bot, amount, permlink):
     transfers =[{
@@ -47,7 +48,7 @@ def run():
     #upvote_bot = 'minnowbooster'
     #amount = 0.05
 
-    post = [line.rstrip('\n') for line in open('/home/pi/post.txt')]
+    post = [line.rstrip('\n') for line in open(post_path + '/post.txt')]
     title  = post[0]
     tags = post[1]
     body = '\n'.join(post[2:])
