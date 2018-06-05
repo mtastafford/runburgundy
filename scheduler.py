@@ -3,7 +3,7 @@ from steem.transactionbuilder import TransactionBuilder
 from steembase import operations
 
 import time, random, os
-post_path = os.environ.get('HOME')
+#post_path = os.environ.get('HOME')
 
 def buy_upvote(author,upvote_bot, amount, permlink):
     transfers =[{
@@ -37,7 +37,6 @@ def submit_post(title, tags, body, author):
         steem.post(title, body, author, permlink, None, None, None, None, tags, None, True)
         print ("Submitted post")
     except Exception as error:
-        print("FUCK")
         print(repr(error))
 
     return permlink
@@ -48,7 +47,7 @@ def run():
     #upvote_bot = 'minnowbooster'
     #amount = 0.05
 
-    post = [line.rstrip('\n') for line in open(post_path + '/post.txt')]
+    post = [line.rstrip('\n') for line in open('post.txt')]
     title  = post[0]
     tags = post[1]
     body = '\n'.join(post[2:])

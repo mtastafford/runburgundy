@@ -12,7 +12,7 @@ from giphypop import translate
 import os
 
 post_path = str(os.environ.get('HOME') + '/reward_post.txt')
-
+os.environ.get('UNLOCK')
 
 s = Steem()
 today = date.today()
@@ -24,16 +24,20 @@ week_cutoff = time.localtime(time.mktime(time.localtime()) - 3600*24*6)
 last_week_end = week_cutoff
 last_week_pretty = str(week_cutoff[0]) + "-" + str(week_cutoff[1]) + "-" + str(week_cutoff[2]-1)
 last_week_start = time.localtime(time.mktime(time.localtime()) - 3600*24*7*2)
-    
+
 print("Week Start = " + str(last_week_start) + " and Week End = " + str(last_week_end))
 day_cutoff = time.localtime(time.mktime(time.localtime())-3600*24)
 dist_pattern = '\d*[\.]*\d*\ km'
 dist_table={} #store daily, weekly, and monthly kms for users
 dist_table['RB_TOTAL_WEEK']={"weekrun":0,"weekbike":0,"weekother":0,"weekrelative":0}
-claimable=s.get_account('runburgundy')["reward_sbd_balance"]
-val_pattern = '\d*[\.]\d*'
-rewards = re.search(val_pattern, claimable).group(0).split(' ')
-rewards = float(rewards[0])
+#claimable=s.get_account('runburgundy')["reward_sbd_balance"]
+claimable = 1.103
+#val_pattern = '\d*[\.]\d*'
+#rewards = re.search(val_pattern, claimable).group(0).split(' ')
+#rewards = float(rewards[0])
+rewards = float(1.103)
+
+#s.claim_reward_balance(account='runburgundy')
 
 open(post_path, 'w').close()
 postfile = open(post_path, 'a')
@@ -47,7 +51,7 @@ postfile.write("### <center> This is officialy **THE FIRST** reward payout for t
 
 
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
-postfile.write("## Total Group Rewards earned last week = " + claimable + "!<br>This will be divided up amongst group members based on weekly kilometres ran & cycled!\n") ### Rewards from prev. week
+postfile.write("## Total Group Rewards earned last week = " + str(round(claimable,3)) + "!<br>This will be divided up amongst group members based on weekly kilometres ran & cycled!\n") ### Rewards from prev. week
 postfile.write("*Note that 1km of running is weighted the same as 3km of cycling!*\n")
 postfile.write("## Below is a summary of the groups runs/bikes/hikes for the week ending: " + last_week_pretty + "\n")
 
@@ -122,7 +126,7 @@ postfile.write("## Total km's Biked: " + str(round(dist_table['RB_TOTAL_WEEK']['
 postfile.write("## Total Weighted km's: " + str(dist_table['RB_TOTAL_WEEK']['weekrelative']) + "\n")
 
 asset = 'SBD'
-message = 'Testing!'
+message = "You're kind of a big deal... Here's your shares for the week!"
 
 for follow in follows:
     with open(post_path, 'a') as postfile:
@@ -153,13 +157,15 @@ for follow in follows:
             else:
                 postfile.write("No Biking :( \n")
             postfile.write("#### Weighted km's = " + str(dist_table[follow]['weekrelative']) + "!\n")
-#            share = round((dist_table[follow]['weekrelative'])/(dist_table['RB_TOTAL_WEEK']['weekrelative'])*float(rewards),3)
-            share = 0.001
+            share = round((dist_table[follow]['weekrelative'])/(dist_table['RB_TOTAL_WEEK']['weekrelative'])*float(rewards),3)
+#            share = 0.001
             postfile.write("#### Reward earned = " + str(dist_table[follow]['weekrelative']) + " / " + str(dist_table['RB_TOTAL_WEEK']['weekrelative']) + " x " + str(rewards) + " SBD = " + str(share) + " SBD!\n")
         else:
             postfile.write("YOU HAVEN'T POSTED ANYTHING TO RUNALYZE YET!!\n")
             postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
-        #s.transfer(follow, amount=share, asset=asset, memo=message, account='runburgundy')
+
+        if share > 0:
+            s.transfer(follow, amount=share, asset=asset, memo=message, account='runburgundy')
 
 postfile = open(post_path, 'a')
 postfile.write("## Run Burgundy is a FitNation initiative\n")
