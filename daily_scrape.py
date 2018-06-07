@@ -10,12 +10,14 @@ import math
 import json
 import giphypop
 from giphypop import translate
-from get_activities import get_runalyze, get_thecrag
+from get_activities import get_runalyze #, get_thecrag
+
 post_path = '/home/pi/post.txt'
 
 with open('members.json') as f:
     members = json.load(f)
 print(members)
+
 s = Steem()
 today = date.today()
 time_now = time.time()
@@ -32,11 +34,7 @@ day_cutoff = time.localtime(time.mktime(time.localtime())- time_hours*3600 - tim
 day_end = time.localtime(time.mktime(time.localtime()) - time_hours*3600 - time_minutes*60 - time_seconds + 3600*24)
 dist_pattern = '\d*[\.]*\d*\ km'
 dist_table={} #store daily, weekly, and monthly kms for users
-dist_table['RB_TOTAL_WEEK']={"weekrun":0,"weekbike":0,"weekother":0,"weekrelative":0}
 claimable=s.get_account('runburgundy')["reward_sbd_balance"]
-val_pattern = '\d*[\.]\d*'
-rewards = re.search(val_pattern, claimable).group(0).split(' ')
-rewards = float(rewards[0])
 
 ### Post header info.
 open(post_path, 'w').close()
@@ -159,7 +157,7 @@ for follow in follows: ##data scrape, weekly totals and write to the post file f
     else:
         postfile.write("YOU HAVEN'T POSTED ANYTHING TO RUNALYZE YET!!\n")
 
-postfile = open(post_path, 'a')
+#postfile = open(post_path, 'a')
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
 postfile.write("## Run Burgundy is a FitNation initiative\n")
 postfile.write("You stay classy, San Diego\n")

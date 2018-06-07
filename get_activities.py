@@ -55,5 +55,3 @@ def get_thecrag(user):
          print(difficulty)
          print(length)
      return climb_list
-
-get_thecrag('revengineer')
