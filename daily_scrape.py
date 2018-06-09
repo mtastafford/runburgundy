@@ -10,14 +10,14 @@ import math
 import json
 import giphypop
 from giphypop import translate
-from get_activities import get_runalyze #, get_thecrag
-
+#from get_activities import get_runalyze #, get_thecrag
+from importlib.machinery import SourceFileLoader
+activity = SourceFileLoader("get_runalyze", "/home/pi/steem/runburgundy/get_activities.py").load_module()
 post_path = '/home/pi/post.txt'
 
 with open('members.json') as f:
     members = json.load(f)
 print(members)
-
 s = Steem()
 today = date.today()
 time_now = time.time()
@@ -35,7 +35,6 @@ day_end = time.localtime(time.mktime(time.localtime()) - time_hours*3600 - time_
 dist_pattern = '\d*[\.]*\d*\ km'
 dist_table={} #store daily, weekly, and monthly kms for users
 claimable=s.get_account('runburgundy')["reward_sbd_balance"]
-
 ### Post header info.
 open(post_path, 'w').close()
 postfile = open(post_path, 'a')
@@ -112,7 +111,7 @@ follows = get_follows('runburgundy')
 
 for follow in follows: ##data scrape, weekly totals and write to the post file for each user consecutively.
     print('Scraping data for ' + follow)
-    activity_list = get_runalyze(members[follow]['runalyze']) #get user activities
+    activity_list = activity.get_runalyze(members[follow]['runalyze']) #get user activities
     print('Calculating distances for ' + follow)
     get_dists()
     member_run_week = dist_table[follow]['weekrun']
