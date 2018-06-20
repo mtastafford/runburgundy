@@ -12,8 +12,8 @@ import giphypop
 from giphypop import translate
 #from get_activities import get_runalyze #, get_thecrag
 from importlib.machinery import SourceFileLoader
-activity = SourceFileLoader("get_runalyze", "/home/pi/steem/runburgundy/get_activities.py").load_module()
-post_path = '/home/pi/post.txt'
+activity = SourceFileLoader("get_runalyze", "/home/mstafford/steem/runburgundy/get_activities.py").load_module()
+post_path = '/home/mstafford/post.txt'
 
 with open('members.json') as f:
     members = json.load(f)
@@ -43,7 +43,7 @@ postfile.write("fitnation running cycling hiking fitness\n") ### This line holds
 postfile.write("![Run_Burgandy.png](https://steemitimages.com/DQmewBzW8MzewBP3qcUJzNL79hmfzM1qUquedRdSaLX83K4/Run_Burgandy.png)\n") ### This line should be the header image
 
 ### Write something to pull custom weekly post from separate text file
-postfile.write("## <center>Welcome to Week No. 04, San Diego!</center>\n")
+postfile.write("## <center>Welcome to Week No. 06, San Diego!</center>\n")
 postfile.write("### <center>If you like exercising, earning money, and getting the freshest #fitnation fitness news delivered to your eyeholes -- then I'm afraid you've come to the right place.</center>\n#### <center>We're now accepting members! Lets talk in the discord, or the comments below!</center>\n")
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
 postfile.write("### <center> ... the fitness team had oddly strong hearts.</center>\n How to join our fitness group:\n * Make yourself a (free!) account for athletics tracking at [Runalyze](https://runalyze.com) (open-source running / athletics analytics site);\n * Post some GPS tracked runs/bikes/hikes to your new Runalyze account; \n * Talk to @mstafford or @aussieninja to prove you're real;\n * Vote on these daily posts to increase their rewards;\n * At the end of each week, the SBD rewards get distributed based on kilometres travelled!\n")

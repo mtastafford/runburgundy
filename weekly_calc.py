@@ -31,11 +31,11 @@ dist_pattern = '\d*[\.]*\d*\ km'
 dist_table={} #store daily, weekly, and monthly kms for users
 dist_table['RB_TOTAL_WEEK']={"weekrun":0,"weekbike":0,"weekother":0,"weekrelative":0}
 #claimable=s.get_account('runburgundy')["reward_sbd_balance"]
-claimable = 1.103
-#val_pattern = '\d*[\.]\d*'
+claimable = 0.909
+val_pattern = '\d*[\.]\d*'
 #rewards = re.search(val_pattern, claimable).group(0).split(' ')
 #rewards = float(rewards[0])
-rewards = float(1.103)
+rewards = float(0.909)
 
 #s.claim_reward_balance(account='runburgundy')
 
@@ -51,7 +51,7 @@ postfile.write("### <center> This is officialy **THE FIRST** reward payout for t
 
 
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
-postfile.write("## Total Group Rewards earned last week = " + str(round(claimable,3)) + "!<br>This will be divided up amongst group members based on weekly kilometres ran & cycled!\n") ### Rewards from prev. week
+postfile.write("## Total Group Rewards earned last week = " + str(claimable) + "!<br>This will be divided up amongst group members based on weekly kilometres ran & cycled!\n") ### Rewards from prev. week
 postfile.write("*Note that 1km of running is weighted the same as 3km of cycling!*\n")
 postfile.write("## Below is a summary of the groups runs/bikes/hikes for the week ending: " + last_week_pretty + "\n")
 
@@ -60,6 +60,8 @@ def get_activities(user): ## Get activities for individual users from Runalyze.c
         user = 'mtastafford'
     if user == 'phelimint':
         user = 'philb'
+    if user == 'faustofraser':
+        user == 'papeti'
     print(user)
     url = 'https://runalyze.com/athlete/' + user + '/feed' ##RSS feed url
     response = requests.get(url).text
@@ -126,9 +128,10 @@ postfile.write("## Total km's Biked: " + str(round(dist_table['RB_TOTAL_WEEK']['
 postfile.write("## Total Weighted km's: " + str(dist_table['RB_TOTAL_WEEK']['weekrelative']) + "\n")
 
 asset = 'SBD'
-message = "You're kind of a big deal... Here's your shares for the week!"
 
 for follow in follows:
+    share = 0
+    message = "You're kind of a big deal... Here's your shares for the week!"
     with open(post_path, 'a') as postfile:
         account_info=s.get_account(follow)
         activity_list = get_activities(follow) #get user activities
@@ -166,6 +169,10 @@ for follow in follows:
 
         if share > 0:
             s.transfer(follow, amount=share, asset=asset, memo=message, account='runburgundy')
+        if share == 0:
+            share = 0.001
+            message = "No exercises from last week! It's called jogging... It might be a soft j... Apparently, you just run for extended periods of time... It's supposed to be wild!"
+            s.transfer(follow, amount = share, asset=asset, memo=message, account='runburgundy')
 
 postfile = open(post_path, 'a')
 postfile.write("## Run Burgundy is a FitNation initiative\n")
