@@ -1,4 +1,5 @@
 from steem import Steem
+from steem.post import Post
 import os
 import requests
 import feedparser
@@ -12,13 +13,15 @@ import giphypop
 from giphypop import translate
 #from get_activities import get_runalyze #, get_thecrag
 from importlib.machinery import SourceFileLoader
-activity = SourceFileLoader("get_runalyze", "/home/mstafford/steem/runburgundy/get_activities.py").load_module()
-post_path = '/home/mstafford/post.txt'
+homepath = os.environ.get('HOME')
+activity = SourceFileLoader("get_runalyze", homepath+"/steem/runburgundy/get_activities.py").load_module()
+post_path = homepath + '/post.txt'
 
-with open('members.json') as f:
+with open(homepath+'/steem/runburgundy/members.json') as f:
     members = json.load(f)
 print(members)
 s = Steem()
+sp = Post
 today = date.today()
 time_now = time.time()
 day_month = time.localtime()[2]
@@ -148,10 +151,21 @@ for follow in follows: ##data scrape, weekly totals and write to the post file f
         recent_posts = s.get_blog(follow,-1,50)
         for post in recent_posts:
             json_data = json.loads(post['comment']['json_metadata'])
-            if 'fitnation' in json_data['tags']:
+            if 'fitnation' in json_data['tags'] and (follow == post['comment']['author']):
                  link = post['comment']['permlink']
                  title = post['comment']['title']
+                 permlink = '@'+follow+'/'+link
                  postfile.write("\n##### Link to latest #fitnation post: [" + title + "](https://steemit.com/@" + follow + "/" + link + ")<br><br>\n")
+                 this_post = sp(permlink)
+                 voters = this_post.active_votes
+                 should_vote = 1
+                 for voter in voters:
+                     if 'runburgundy' in voter['voter']:
+                         should_vote = 0
+                 if should_vote == 1:
+                     print(permlink)
+                     print("voting on new Fitnation post!!!!")
+                     s.vote(permlink, 100, 'runburgundy')
                  break
     else:
         postfile.write("YOU HAVEN'T POSTED ANYTHING TO RUNALYZE YET!!\n")

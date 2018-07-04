@@ -41,13 +41,13 @@ def submit_post(title, tags, body, author):
 
     return permlink
 
-
+homepath = os.environ.get('HOME')
 def run():
     author = 'runburgundy'
     #upvote_bot = 'minnowbooster'
     #amount = 0.05
 
-    post = [line.rstrip('\n') for line in open('/home/mstafford/post.txt')]
+    post = [line.rstrip('\n') for line in open(homepath + '/post.txt')]
     title  = post[0]
     tags = post[1]
     body = '\n'.join(post[2:])

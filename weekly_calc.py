@@ -30,14 +30,14 @@ day_cutoff = time.localtime(time.mktime(time.localtime())-3600*24)
 dist_pattern = '\d*[\.]*\d*\ km'
 dist_table={} #store daily, weekly, and monthly kms for users
 dist_table['RB_TOTAL_WEEK']={"weekrun":0,"weekbike":0,"weekother":0,"weekrelative":0}
-#claimable=s.get_account('runburgundy')["reward_sbd_balance"]
-claimable = 0.909
+claimable=s.get_account('runburgundy')["reward_sbd_balance"]
+#claimable = 0.909
 val_pattern = '\d*[\.]\d*'
-#rewards = re.search(val_pattern, claimable).group(0).split(' ')
-#rewards = float(rewards[0])
-rewards = float(0.909)
+rewards = re.search(val_pattern, claimable).group(0).split(' ')
+rewards = float(rewards[0])
+#rewards = float(0.909)
 
-#s.claim_reward_balance(account='runburgundy')
+s.claim_reward_balance(account='runburgundy')
 
 open(post_path, 'w').close()
 postfile = open(post_path, 'a')
