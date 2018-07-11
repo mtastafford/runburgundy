@@ -16,13 +16,12 @@ def converter(object_):
     if isinstance(object_, datetime.datetime):
         return object_.__str__()
 
-
+post_list = []
+post_age = []
 while True:
     try:
         for post in stream:
             if post.is_main_post():
-                #print(json.dumps(post, default=converter))
-                print(post['body'])
             ### IF MEMBER POSTS -- 25% UPVOTE! <-- PERCENTAGE SHOULD BE VARIABLE
             ### IF MEMBER POSTS WITH FITNATION TAG -- 50% UPVOTE! <-- PERCENTAGE SHOULD BE VARIABLE
                 author = post["author"]
