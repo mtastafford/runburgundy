@@ -46,7 +46,7 @@ postfile.write("fitnation running cycling hiking fitness\n") ### This line holds
 postfile.write("![Run_Burgandy.png](https://steemitimages.com/DQmewBzW8MzewBP3qcUJzNL79hmfzM1qUquedRdSaLX83K4/Run_Burgandy.png)\n") ### This line should be the header image
 
 ### Write something to pull custom weekly post from separate text file
-postfile.write("## <center>Welcome to Week No. 06, San Diego!</center>\n")
+postfile.write("## <center>Welcome to Week No. 08, San Diego!</center>\n")
 postfile.write("### <center>If you like exercising, earning money, and getting the freshest #fitnation fitness news delivered to your eyeholes -- then I'm afraid you've come to the right place.</center>\n#### <center>We're now accepting members! Lets talk in the discord, or the comments below!</center>\n")
 postfile.write("<center>![divider.png](https://steemitimages.com/DQmZMoUJp6VNtbthGnafHXDSYzyXVU5JC3ErFs7qfDEL8QF/divider.png)</center>\n")
 postfile.write("### <center> ... the fitness team had oddly strong hearts.</center>\n How to join our fitness group:\n * Make yourself a (free!) account for athletics tracking at [Runalyze](https://runalyze.com) (open-source running / athletics analytics site);\n * Post some GPS tracked runs/bikes/hikes to your new Runalyze account; \n * Talk to @mstafford or @aussieninja to prove you're real;\n * Vote on these daily posts to increase their rewards;\n * At the end of each week, the SBD rewards get distributed based on kilometres travelled!\n")
@@ -73,27 +73,27 @@ def get_dists():
     other_month = 0.0 ##cumulative hiking (other) km's for month
     for i in range(len(activity_list)):  ## Summing up daily running distance
         if activity_list[i]['published'] >= day_cutoff and activity_list[i]['sport'] == ('Running' or 'Jogging' or 'Walking'): ##if posted since sunday at midnight & Run/Jog/Walk, activity counts
-            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ')## search for distance using regex pattern above. 
+            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ') ## search for distance using regex pattern above. 
             distance = float(distance[0])##change distance string to float
             run_day += distance #add activity distance to week total
     for i in range(len(activity_list)):  ## Summing up weekly running distance
         if activity_list[i]['published'] >= week_cutoff and activity_list[i]['published'] <= day_end and activity_list[i]['sport'] == ('Running' or 'Jogging' or 'Walking'): ##if posted since sunday at midnight & Run/Jog/Walk, activity counts
-            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ')## search for distance using regex pattern above. 
+            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ') ## search for distance using regex pattern above. 
             distance = float(distance[0])##change distance string to float
             run_week += distance #add activity distance to week total
     for i in range(len(activity_list)):  ## Summing up daily biking distance
         if activity_list[i]['published'] >= day_cutoff and activity_list[i]['sport'] == ('Biking'): ##if posted since sunday at midnight & biking, activity counts
-            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ')## search for distance using regex pattern above. 
+            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ') ## search for distance using regex pattern above. 
             distance = float(distance[0])##change distance string to float
             bike_day += distance #add activity distance to day total
     for i in range(len(activity_list)):  ## Summing up weekly biking distance
         if activity_list[i]['published'] >= week_cutoff and activity_list[i]['sport'] == ('Biking'): ##if posted since sunday at midnight & biking, activity counts
-            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ')## search for distance using regex pattern above. 
+            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ') ## search for distance using regex pattern above. 
             distance = float(distance[0])##change distance string to float
             bike_week += distance #add activity distance to week total
     for i in range(len(activity_list)):  ## Summing up daily hiking distance
         if activity_list[i]['published'] >= day_cutoff and activity_list[i]['sport'] == ('Other'): ##if posted since sunday at midnight & biking, activity counts
-            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ')## search for distance using regex pattern above. 
+            distance = re.search(dist_pattern, str(activity_list[i]['distance'])).group(0).split(' ') ## search for distance using regex pattern above. 
             distance = float(distance[0])##change distance string to float
             other_day += distance #add activity distance to week total
     for i in range(len(activity_list)):  ## Summing up weekly hiking distance
@@ -150,23 +150,26 @@ for follow in follows: ##data scrape, weekly totals and write to the post file f
             postfile.write("No activities so far this week.\n")
         recent_posts = s.get_blog(follow,-1,50)
         for post in recent_posts:
-            json_data = json.loads(post['comment']['json_metadata'])
-            if 'fitnation' in json_data['tags'] and (follow == post['comment']['author']):
-                 link = post['comment']['permlink']
-                 title = post['comment']['title']
-                 permlink = '@'+follow+'/'+link
-                 postfile.write("\n##### Link to latest #fitnation post: [" + title + "](https://steemit.com/@" + follow + "/" + link + ")<br><br>\n")
-                 this_post = sp(permlink)
-                 voters = this_post.active_votes
-                 should_vote = 1
-                 for voter in voters:
-                     if 'runburgundy' in voter['voter']:
-                         should_vote = 0
-                 if should_vote == 1:
-                     print(permlink)
-                     print("voting on new Fitnation post!!!!")
-                     s.vote(permlink, 100, 'runburgundy')
-                 break
+            json_data = {}
+            if post['comment']['id']!=0:
+                json_data = json.loads(post['comment']['json_metadata'])
+                if 'fitnation' in json_data['tags'] and (follow == post['comment']['author']):
+                    link = post['comment']['permlink']
+                    title = post['comment']['title']
+                    permlink = '@'+follow+'/'+link
+                    postfile.write("\n##### Link to latest #fitnation post: [" + title + "](https://steemit.com/@" + follow + "/" + link + ")<br><br>\n")
+                    #this_post = sp(permlink)
+                    #print(this_post)
+                    #voters = this_post.active_votes
+                    #should_vote = 1
+                #for voter in voters:
+                    #if 'runburgundy' in voter['voter']:
+                        #should_vote = 0
+                #if should_vote == 1:
+                    #print(permlink)
+                    #print("voting on new Fitnation post!!!!")
+                    #s.vote(permlink, 100, 'runburgundy')
+                break
     else:
         postfile.write("YOU HAVEN'T POSTED ANYTHING TO RUNALYZE YET!!\n")
 
