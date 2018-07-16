@@ -104,17 +104,20 @@ def get_dists():
     dist_table[follow]={"todayrun":run_day,"weekrun":run_week,"todaybike":bike_day,"weekbike":bike_week,"todayother":other_day,"weekother":other_week}
 
 def get_follows(user): ## Get @runburgundy following list
-    follows = s.get_following(user, 0, 0, 10)
+    follows = s.get_following(user, 0, 0, 20)
     users = []
     for i in range(len(follows)):
         users.append(follows[i]['following'])
     return users
 
 follows = get_follows('runburgundy')
-
+print(follows)
 for follow in follows: ##data scrape, weekly totals and write to the post file for each user consecutively.
     print('Scraping data for ' + follow)
     activity_list = activity.get_runalyze(members[follow]['runalyze']) #get user activities
+    print(activity_list)
+    print(len(activity_list))
+    print(members[follow]['runalyze'])
     print('Calculating distances for ' + follow)
     get_dists()
     member_run_week = dist_table[follow]['weekrun']

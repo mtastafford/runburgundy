@@ -29,9 +29,9 @@ while True:
                 tags = ", ".join(post["tags"])                
                 if author in members:
                     if 'fitnation' in tags:
-                        weight = 50
+                        weight = 100
                     else:
-                        weight = 25
+                        weight = 80
                     post.vote(weight, voter = 'runburgundy')
                     print('Hot Damn! Voted on {}s post called *{}*'.format(author, title))
                 break
